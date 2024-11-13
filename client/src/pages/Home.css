@@ -1,0 +1,73 @@
+/* Home.css */
+
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .navbar {
+    background-color: #333333;
+    overflow: hidden;
+  }
+  
+  .navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar li {
+    display: inline;
+  }
+  
+  .navbar li a,
+  .navbar li button {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+  }
+  
+  .navbar li a:hover,
+  .navbar li button:hover {
+    background-color: #111;
+  }
+  
+  .navbar li button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .logout-button {
+    margin-left: auto;
+  }
+  
+  .content {
+    padding: 20px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .home-page {
+    font-size: 18px;
+  }
+  
+  .home-page h1 {
+    font-size: 28px;
+  }
+  
+  .home-page ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  
+  .home-page ul ul {
+    list-style-type: circle;
+  }
+  
