@@ -3,34 +3,38 @@ const CommunicationLog = require('../models/CommunicationLog');
 const Customer = require('../models/Customer');
 const queueService = require('../services/queue.service');
 
-exports.createAudience = async (req, res) => {
+// Creates a scheduled or regular campaign
+exports.createScheduledCampaign = async (req, res) => {
   try {
-    console.log('Received request to create audience:', req.body);
+    console.log('Received request to create scheduled campaign:', req.body);
 
-    // Validation
-    await validateCreateAudienceRequest(req);
+    await validateCreateCampaignRequest(req);
 
-    const { rules, message, logicalOperator } = req.body;
-    console.log('Validation successful. Rules:', rules, 'Message:', message, 'LogicalOperator:', logicalOperator);
-
+    const { rules, message, logicalOperator, scheduledAt, isAutomated, trigger } = req.body;
     const audience = await getAudienceSize(rules, logicalOperator);
     const audienceSize = audience.length;
-    console.log('Audience size:', audienceSize);
 
-    // Append the audience size to the audience array
-    audience.push({ audienceSize });
-
-    const communicationLog = new CommunicationLog({ audience, message });
+    // Prepare the campaign with additional fields for scheduling and automation
+    const communicationLog = new CommunicationLog({
+      audience,
+      message,
+      scheduledAt: scheduledAt || null,
+      status: scheduledAt ? 'PENDING' : 'SENT',  // If scheduled, set status to 'PENDING'
+      isAutomated: isAutomated || false,
+      trigger: trigger || null,
+    });
+    
     await communicationLog.save();
-
     console.log('Communication log saved:', communicationLog);
 
-    // Simulate sending campaign
-    sendCampaign(communicationLog);
+    // If not scheduled, send immediately
+    if (!scheduledAt) {
+      await exports.sendCampaign(communicationLog);
+    }
 
-    res.status(201).json(communicationLog);
+    res.status(201).json({ message: 'Campaign created successfully!', communicationLog });
   } catch (err) {
-    console.error('Error in createAudience:', err.message);
+    console.error('Error in createScheduledCampaign:', err.message);
     res.status(400).json({ error: err.message });
   }
 };
@@ -47,15 +51,33 @@ exports.getCampaigns = async (req, res) => {
   }
 };
 
+// Deletes a specific campaign by ID
+exports.deleteCampaign = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedCampaign = await CommunicationLog.findByIdAndDelete(id);
+
+    if (!deletedCampaign) {
+      return res.status(404).json({ error: 'Campaign not found' });
+    }
+
+    res.status(200).json({ message: 'Campaign deleted successfully' });
+  } catch (err) {
+    console.error('Error in deleteCampaign:', err.message);
+    res.status(500).json({ error: 'Failed to delete campaign' });
+  }
+};
+
+
 exports.checkAudienceSize = async (req, res) => {
   try {
     console.log('Received request to check audience size:', req.body);
 
-    await validateCreateAudienceRequest(req);
+    await validateCreateCampaignRequest(req);
 
     const { rules, logicalOperator } = req.body;
     const audience = await getAudienceSize(rules, logicalOperator);
-    
+
     console.log('Audience size checked:', audience.length);
     res.json({ audienceSize: audience.length });
   } catch (err) {
@@ -64,16 +86,18 @@ exports.checkAudienceSize = async (req, res) => {
   }
 };
 
-const validateCreateAudienceRequest = async (req) => {
+// Validates campaign creation request, including message and optional rules
+const validateCreateCampaignRequest = async (req) => {
   console.log('Validating request:', req.body);
 
   const validations = [
-    body('rules').isArray().withMessage('Rules must be an array'),
+    body('rules').optional().isArray().withMessage('Rules must be an array'),
     body('rules.*.field').exists().withMessage('Each rule must have a field').isString().withMessage('Field must be a string'),
     body('rules.*.operator').exists().withMessage('Each rule must have an operator').isString().withMessage('Operator must be a string'),
     body('rules.*.value').exists().withMessage('Each rule must have a value'),
     body('message').exists().withMessage('Message is required').isString().withMessage('Message must be a string'),
-    body('logicalOperator').exists().withMessage('Logical operator is required').isString().withMessage('Logical operator must be a string').isIn(['AND', 'OR']).withMessage('Logical operator must be either AND or OR'),
+    body('logicalOperator').optional().isString().withMessage('Logical operator must be a string').isIn(['AND', 'OR']).withMessage('Logical operator must be either AND or OR'),
+    body('scheduledAt').optional().isISO8601().withMessage('Scheduled time must be a valid date'),
   ];
 
   await Promise.all(validations.map(validation => validation.run(req)));
@@ -143,15 +167,15 @@ const getMongoOperator = (operator) => {
   }
 };
 
+// Sends a campaign immediately or queues for scheduled campaigns
 const sendCampaign = async (communicationLog) => {
   console.log('Simulating sending campaign for communication log:', communicationLog);
 
-  // Simulate sending the campaign to a dummy vendor API
-  const vendorResponses = [
-    { id: communicationLog._id, status: 'SENT' },
-    { id: communicationLog._id, status: 'FAILED' },
-    // Add more dummy responses as needed
-  ];
+  const vendorResponses = communicationLog.audience.map(customer => ({
+    id: communicationLog._id,
+    customer: customer,
+    status: Math.random() < 0.9 ? 'SENT' : 'FAILED', // 90% chance of "SENT", 10% "FAILED"
+  }));
 
   for (const response of vendorResponses) {
     console.log('Publishing message to queue:', response);
@@ -162,5 +186,12 @@ const sendCampaign = async (communicationLog) => {
     });
   }
 
+  communicationLog.status = 'SENT';
+  communicationLog.sentAt = new Date();
+  await communicationLog.save();
+
   console.log('Campaign simulation complete');
 };
+
+// Export the sendCampaign function for use in other modules
+exports.sendCampaign = sendCampaign;

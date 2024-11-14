@@ -12,7 +12,8 @@ const AudienceForm = () => {
   const initialValues = {
     rules: [{ field: 'totalSpend', operator: '>', value: '' }],
     message: '',
-    logicalOperator: 'AND' // Default logical operator
+    logicalOperator: 'AND', // Default logical operator
+    scheduledAt: '' // New field for scheduling the campaign
   };
 
   const validationSchema = Yup.object().shape({
@@ -24,7 +25,13 @@ const AudienceForm = () => {
       })
     ),
     message: Yup.string().required('Message is required'),
-    logicalOperator: Yup.string().required('Logical operator is required').oneOf(['AND', 'OR'], 'Logical operator must be either AND or OR')
+    logicalOperator: Yup.string()
+      .required('Logical operator is required')
+      .oneOf(['AND', 'OR'], 'Logical operator must be either AND or OR'),
+    scheduledAt: Yup.date()
+      .nullable()
+      .min(new Date(), 'Scheduled time must be in the future')
+      .typeError('Scheduled time must be a valid date and time')
   });
 
   const handleCheckAudienceSize = async (values) => {
@@ -41,7 +48,7 @@ const AudienceForm = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     console.log('Submitting campaign...');
     try {
-      await axios.post('http://localhost:5000/api/campaigns/create-audience', values);
+      await axios.post('http://localhost:5000/api/campaigns/create-scheduled', values);
       console.log('Campaign created successfully');
       alert('Campaign created successfully');
       navigate('/home/audience');
@@ -133,6 +140,17 @@ const AudienceForm = () => {
                     <option value="OR">OR</option>
                   </Field>
                   <ErrorMessage name="logicalOperator" component="div" className="error-message" />
+                </div>
+
+                {/* New Scheduled At Field for Date and Time */}
+                <div className="scheduled-at-field">
+                  <label htmlFor="scheduledAt">Scheduled At (Date & Time):</label>
+                  <Field
+                    name="scheduledAt"
+                    type="datetime-local" // Allows both date and time input
+                    className="scheduled-at-input"
+                  />
+                  <ErrorMessage name="scheduledAt" component="div" className="error-message" />
                 </div>
 
                 <div className="check-audience">

@@ -1,221 +1,202 @@
+/* General Enhancements */
 .max-w-lg {
-    max-width: 700px;
-  }
-  
-  .rules-container {
-    padding-bottom: 20px;
-  }
-  
-  .rule-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .rule-fields {
-    width: 30%;
-    margin-right: 10px;
-  }
-  
-  .rule-fields select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .rule-operator {
-    width: 25%;
-    margin-right: 10px;
-  }
-  
-  .rule-operator select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .rule-value {
-    width: 30%;
-    margin-right: 10px;
-  }
-  
-  .rule-value input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .rule-remove button {
-    background-color: #ff4d4d;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .add-rule-button {
-    background-color: #3399ff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .message-field input[type="text"] {
-    width: calc(100% - 20px);
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .check-audience {
-    margin-bottom: 20px;
-  }
-  
-  .check-audience-button {
-    background-color: #3399ff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px; /* Added margin-top */
-  }
-  
-  .audience-size {
-    color: #008000;
-  }
-  
-  .submit-button {
-    text-align: center;
-  }
-  
-  .submit-button button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .error-message {
-    color: #ff4d4d;
-    font-size: 14px;
-  }
-  
-  .centered-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-  }
-  
-  .form-container {
-    border: 2px solid #ddd;
-    padding: 20px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-  }
-  
-  .rule-item {
-    display: flex;
-    margin-bottom: 10px;
-  }
-  
-  .rule-item > div {
-    margin-right: 10px;
-  }
-  
-  .rule-remove button {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .add-rule-button {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .check-audience-button {
-    background-color: #2196f3;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px; /* Added margin-top */
-  }
-  
-  .logical-operator-field {
-    margin-top: 10px; /* Added margin-top */
-  }
-  
-  .logical-operator-field button {
-    background-color: #4caf50; /* Background color */
-    color: white;
-    border: 2px solid #4caf50; /* Added border */
-    padding: 8px 12px; /* Padding */
-    border-radius: 5px; /* Border radius */
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth transition */
-  }
-  
-  .logical-operator-field button:hover {
-    background-color: #45a049; /* Darker background color on hover */
-  }
-  
-  .message-field {
-    margin-bottom: 10px; /* Added margin-bottom */
-  }
-  
-  .submit-button button {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .error-message {
-    color: #f44336;
-  }
-  
-  /* Enhanced styling for the Create Campaign heading */
-  .heading {
-    font-size: 2.5rem;
-    color: #333;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid #4caf50;
-    padding-bottom: 0.5rem;
-    margin-top: -20px;
-  }
-  
-  .heading::before {
-    content: '';
-    display: block;
-    width: 100px;
-    height: 4px;
-    background-color: #4caf50;
-    margin: 0 auto 1rem;
-  }
-  
-  /* Add other CSS styling for your form as needed */
-  
+  max-width: 700px;
+}
+
+.centered-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.form-container {
+  border: 2px solid #ddd;
+  padding: 30px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  max-width: 700px;
+  width: 100%;
+}
+
+/* Enhanced Heading */
+.heading {
+  font-size: 2.2rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid #4caf50;
+  padding-bottom: 0.5rem;
+  margin-top: -20px;
+  text-transform: uppercase;
+}
+
+.heading::before {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color: #4caf50;
+  margin: 0 auto 1rem;
+}
+
+/* Rule Item Styles */
+.rules-container {
+  padding-bottom: 20px;
+}
+
+.rule-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.rule-fields, .rule-operator, .rule-value {
+  width: 30%;
+  margin-right: 10px;
+}
+
+.rule-fields select, .rule-operator select, .rule-value input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.rule-fields select:focus, .rule-operator select:focus, .rule-value input[type="text"]:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+/* Add and Remove Button Styles */
+.rule-remove button, .add-rule-button {
+  background-color: #ff4d4d;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.rule-remove button:hover {
+  background-color: #e03e3e;
+}
+
+.add-rule-button {
+  background-color: #4caf50;
+  padding: 10px 20px;
+}
+
+.add-rule-button:hover {
+  background-color: #45a049;
+}
+
+/* Message Field */
+.message-field input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.message-field input[type="text"]:focus {
+  border-color: #4caf50;
+}
+
+/* Check Audience Button */
+.check-audience {
+  margin-bottom: 20px;
+}
+
+.check-audience-button {
+  background-color: #2196f3;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.check-audience-button:hover {
+  background-color: #1e88e5;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.audience-size {
+  color: #008000;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Logical Operator Field */
+.logical-operator-field {
+  margin-top: 15px;
+}
+
+.logical-operator-field button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: 2px solid #4caf50;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logical-operator-field button:hover {
+  background-color: #45a049;
+}
+
+/* Submit Button */
+.submit-button {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.submit-button button {
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.submit-button button:hover {
+  background-color: #45a049;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.submit-button button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.4);
+}
+
+/* Error Message */
+.error-message {
+  color: #f44336;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+/* Enhanced Styling for Field Titles and Labels */
+label {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+input, select {
+  font-size: 1rem;
+}

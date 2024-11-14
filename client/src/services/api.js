@@ -10,3 +10,4 @@ export const createCustomer = (customerData) => api.post('/customers', customerD
 export const createOrder = (orderData) => api.post('/orders', orderData);
 export const createAudience = (audienceData) => api.post('/campaigns/audience', audienceData);
 export const getCampaigns = () => api.get('/campaigns/')
+export const deleteCampaign = (id) => api.delete(`/campaigns/${id}`);
