@@ -1,5 +1,5 @@
-// routes/auth.routes.js
 const express = require('express');
+const { v4: uuidv4 } = require('uuid'); 
 const router = express.Router();
 const passport = require('../services/auth.service');
 require('dotenv').config();
@@ -8,15 +8,24 @@ require('dotenv').config();
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  // Check if the provided credentials match the environment variables
-  if (
-    username === process.env.APP_USERNAME &&
-    password === process.env.APP_PASSWORD
-  ) {
-    req.session.isAuthenticated = true; // Mark session as authenticated
-    res.json({ success: true, message: 'Login successful' });
-  } else {
-    res.status(401).json({ success: false, message: 'Invalid username or password' });
+  try {
+    if (
+      username === process.env.APP_USERNAME &&
+      password === process.env.APP_PASSWORD
+    ) {
+      // Mark session as authenticated
+      req.session.isAuthenticated = true;
+
+   
+      const userId = process.env.APP_USER_ID || uuidv4(); // Generate a unique ID
+      req.session.userId = userId; 
+      res.json({ success: true, message: 'Login successful', userId });
+    } else {
+      res.status(401).json({ success: false, message: 'Invalid username or password' });
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ success: false, message: 'An error occurred during login' });
   }
 });
 
@@ -30,15 +39,20 @@ router.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   (req, res) => {
-    // Successful authentication, redirect to the client application
-    req.session.isAuthenticated = true; // Set the session as authenticated
-    res.redirect('http://localhost:3000/home');
+    req.session.isAuthenticated = true;
+    req.session.googleId = req.user.googleId; // Store googleId in session
+
+    const redirectUrl = `http://localhost:3000/home?googleId=${req.user.googleId}`;
+    res.redirect(redirectUrl);
   }
 );
 
 // Route to check authentication status
 router.get('/status', (req, res) => {
-  res.json({ isAuthenticated: req.session.isAuthenticated || false });
+  res.json({
+    isAuthenticated: req.session.isAuthenticated || false,
+    googleId: req.session.googleId || req.session.userId || null, // Send googleId or userId
+  });
 });
 
 // Logout Route

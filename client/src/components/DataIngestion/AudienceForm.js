@@ -45,19 +45,45 @@ const AudienceForm = () => {
     }
   };
 
+  // const handleSubmit = async (values, { setSubmitting }) => {
+  //   console.log('Submitting campaign...');
+  //   try {
+  //     await axios.post('http://localhost:5000/api/campaigns/create-scheduled', values);
+  //     console.log('Campaign created successfully');
+  //     alert('Campaign created successfully');
+  //     navigate('/home/audience');
+  //   } catch (error) {
+  //     console.error('Error creating audience', error.response.data);
+  //   } finally {
+  //     setSubmitting(false);
+  //   }
+  // };
   const handleSubmit = async (values, { setSubmitting }) => {
     console.log('Submitting campaign...');
     try {
-      await axios.post('http://localhost:5000/api/campaigns/create-scheduled', values);
-      console.log('Campaign created successfully');
+      const googleId = localStorage.getItem('googleId'); // Retrieve googleId from localStorage
+      if (!googleId) {
+        alert('googleId not found. Please log in again.');
+        return;
+      }
+  
+      const payload = { ...values, googleId }; // Include googleId in the payload
+      const response = await axios.post(
+        'http://localhost:5000/api/campaigns/create-scheduled',
+        payload
+      );
+  
+      console.log('Campaign created successfully:', response.data);
       alert('Campaign created successfully');
       navigate('/home/audience');
     } catch (error) {
-      console.error('Error creating audience', error.response.data);
+      console.error('Error creating audience:', error.response?.data || error.message);
     } finally {
       setSubmitting(false);
     }
   };
+  
+  
 
   return (
     <div className="centered-container">
@@ -166,12 +192,10 @@ const AudienceForm = () => {
                   </button>
                   {audienceSize !== null && <div className="audience-size">Audience Size: {audienceSize}</div>}
                 </div>
-
-                <div className="submit-button">
                   <button type="submit" className="submit-button" disabled={isSubmitting}>
                     Create Campaign
                   </button>
-                </div>
+                
               </Form>
             )}
           </Formik>

@@ -50,9 +50,11 @@ const CustomerForm = () => {
       <h1 className="heading">Create Customer</h1>
       <form onSubmit={handleSubmit} className="customer-form">
         <div className="form-group">
+          <label htmlFor="name">Name</label>
           <input
+            id="name"
             type="text"
-            placeholder="Name"
+            placeholder="Enter your name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -62,9 +64,11 @@ const CustomerForm = () => {
         </div>
 
         <div className="form-group">
+          <label htmlFor="email">Email</label>
           <input
+            id="email"
             type="email"
-            placeholder="Email"
+            placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -77,6 +81,7 @@ const CustomerForm = () => {
       </form>
     </div>
   );
+
 };
 
 export default CustomerForm;

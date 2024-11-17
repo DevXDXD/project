@@ -9,20 +9,26 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  // Check if the user is already authenticated
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/auth/status', {
-          credentials: 'include'
+          credentials: 'include',
         });
         const data = await response.json();
+
         if (data.isAuthenticated) {
+          if (data.googleId) {
+            localStorage.setItem('googleId', data.googleId);
+          } else if (data.userId) {
+            localStorage.setItem('userId', data.userId);
+          }
           onLogin();
-          navigate('/home');
+        } else {
+          navigate('/login');
         }
       } catch (error) {
-        console.error('Error checking auth status:', error);
+        console.error('Error checking authentication status:', error);
       }
     };
 
@@ -35,6 +41,8 @@ const Login = ({ onLogin }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
+
     if (!username || !password) {
       setError('Please enter both username and password.');
       return;
@@ -45,11 +53,15 @@ const Login = ({ onLogin }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
-        credentials: 'include'
+        credentials: 'include',
       });
 
       const data = await response.json();
       if (data.success) {
+        localStorage.setItem('userId', data.userId);
+        console.log('Local Storage after login:');
+        console.log('userId:', localStorage.getItem('userId'));
+
         onLogin();
         navigate('/home');
       } else {
@@ -63,9 +75,15 @@ const Login = ({ onLogin }) => {
 
   return (
     <div className={styles['login-page']}>
+      {/* Left side for CRM */}
+      <div className={styles['left-container']}>
+        <h1 className={styles['left-text']}>CRM</h1>
+      </div>
+
+      {/* Login Container */}
       <div className={styles['login-container']}>
-        <h1 className={styles['title']}>Welcome to Mini-CRM</h1>
-        <p className={styles['subtitle']}>Manage your customer relationships with ease.</p>
+        <h1 className={styles['title']}>Welcome to CRM</h1>
+        <p className={styles['subtitle']}>Effortlessly build stronger customer connections.</p>
         <div className={styles['login-box']}>
 
           {/* Username and Password Login Form */}

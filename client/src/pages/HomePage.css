@@ -1,55 +1,57 @@
-/* components/HomePage.css */
-
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #f4f6f9; /* Light background for contrast */
+  background-color: #f0f2f5; 
   margin: 0;
   padding: 0;
 }
 
 .home-page {
   background-color: #ffffff;
-  padding: 50px;
-  border-radius: 12px; /* Softer border radius */
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12); /* Enhanced shadow for depth */
-  max-width: 800px;
-  margin: 60px auto;
+  padding: 60px;
+  border-radius: 16px; 
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  max-width: 850px;
+  margin: 80px auto;
   font-family: 'Roboto', sans-serif;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .home-page:hover {
-  transform: translateY(-5px); /* Lift effect on hover */
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+  transform: translateY(-8px); 
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2); 
 }
 
 .home-page-title {
-  font-size: 2.5rem;
-  color: #333;
+  font-size: 2.7rem; 
+  color: #333333;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   position: relative;
+}
+
+.home-page-title .highlight {
+  color: #1a73e8;
 }
 
 .home-page-title::after {
   content: '';
   display: block;
-  width: 80px;
+  width: 100px;
   height: 4px;
-  background-color: #4CAF50; /* Green accent color */
-  margin: 0.5rem auto 0;
-  border-radius: 2px;
+  background-color: #3f51b5;
+  margin: 0.6rem auto 0;
+  border-radius: 3px;
 }
 
 .home-page-intro {
-  font-size: 1.1rem;
-  color: #555;
+  font-size: 1.2rem;
+  color: #555555;
   text-align: center;
-  margin-bottom: 30px;
-  line-height: 1.6;
+  margin-bottom: 35px;
+  line-height: 1.8;
 }
 
 .home-page-list {
@@ -59,27 +61,33 @@ body {
 }
 
 .home-page-list > li {
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px; /* Softer border radius */
+  background: #fdfdfd; 
+  border: 1px solid #e0e0e0; 
+  border-radius: 12px;
   padding: 20px;
-  margin-bottom: 15px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); 
   display: flex;
   align-items: flex-start;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .home-page-list > li:hover {
-  background-color: #f1f1f1;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12); /* Slightly stronger shadow on hover */
+  background-color: #fafafa;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); 
 }
 
 .icon {
-  font-size: 1.5rem; /* Adjusted font size */
-  color: #4CAF50; /* Accent color */
+  font-size: 2rem;
+  color: #3f51b5; 
   flex-shrink: 0;
-  margin-right: 15px;
+  margin-right: 20px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.icon:hover {
+  transform: scale(1.2);
+  color: #1a73e8;
 }
 
 .content {
@@ -87,17 +95,17 @@ body {
 }
 
 .nested-list {
-  list-style-type: disc;
-  margin-left: 25px;
-  margin-top: 10px;
-  color: #666; /* Slightly darker color for nested list */
+  list-style-type: circle;
+  margin-left: 30px;
+  margin-top: 12px;
+  color: #666666; 
 }
 
 .nested-list li {
   background: none;
   border: none;
   padding: 0;
-  margin: 5px 0;
+  margin: 6px 0;
   box-shadow: none;
-  font-size: 0.95rem; /* Slightly smaller font */
+  font-size: 1rem; 
 }

@@ -3,7 +3,9 @@ const CommunicationLog = require('../models/CommunicationLog');
 const Customer = require('../models/Customer');
 const queueService = require('../services/queue.service');
 
-// Creates a scheduled or regular campaign
+const User = require('../models/User'); // Ensure the User model is imported
+
+// Creates a scheduled or regular campaign with a thank-you message
 exports.createScheduledCampaign = async (req, res) => {
   try {
     console.log('Received request to create scheduled campaign:', req.body);
@@ -11,19 +13,34 @@ exports.createScheduledCampaign = async (req, res) => {
     await validateCreateCampaignRequest(req);
 
     const { rules, message, logicalOperator, scheduledAt, isAutomated, trigger } = req.body;
+
+    // Retrieve googleId from request body or session
+    const googleId = req.body.googleId || req.session?.googleId;
+    if (!googleId) {
+      return res.status(400).json({ error: 'googleId is required' });
+    }
+
+    // Fetch user details to get firstName
+    const user = await User.findOne({ googleId });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Get audience size
     const audience = await getAudienceSize(rules, logicalOperator);
     const audienceSize = audience.length;
 
-    // Prepare the campaign with additional fields for scheduling and automation
+    // Create and save the communication log
     const communicationLog = new CommunicationLog({
+      googleId, // Use googleId instead of userId
       audience,
       message,
       scheduledAt: scheduledAt || null,
-      status: scheduledAt ? 'PENDING' : 'SENT',  // If scheduled, set status to 'PENDING'
+      status: scheduledAt ? 'PENDING' : 'SENT',
       isAutomated: isAutomated || false,
       trigger: trigger || null,
     });
-    
+
     await communicationLog.save();
     console.log('Communication log saved:', communicationLog);
 
@@ -32,38 +49,127 @@ exports.createScheduledCampaign = async (req, res) => {
       await exports.sendCampaign(communicationLog);
     }
 
-    res.status(201).json({ message: 'Campaign created successfully!', communicationLog });
+    // Send response with a thank-you message
+    res.status(201).json({
+      message: `Thank you, ${user.firstName}, for scheduling a campaign! Enjoy a 10% discount on your next campaign.`,
+      communicationLog,
+    });
   } catch (err) {
     console.error('Error in createScheduledCampaign:', err.message);
     res.status(400).json({ error: err.message });
   }
 };
 
+// // Creates a scheduled or regular campaign
+// exports.createScheduledCampaign = async (req, res) => {
+//   try {
+//     console.log('Received request to create scheduled campaign:', req.body);
+
+//     await validateCreateCampaignRequest(req);
+
+//     const { rules, message, logicalOperator, scheduledAt, isAutomated, trigger } = req.body;
+
+//     // Retrieve googleId from request body or session
+//     const googleId = req.body.googleId || req.session?.googleId;
+//     if (!googleId) {
+//       return res.status(400).json({ error: 'googleId is required' });
+//     }
+
+//     // Get audience size
+//     const audience = await getAudienceSize(rules, logicalOperator);
+//     const audienceSize = audience.length;
+
+//     // Create and save the communication log
+//     const communicationLog = new CommunicationLog({
+//       googleId, // Use googleId instead of userId
+//       audience,
+//       message,
+//       scheduledAt: scheduledAt || null,
+//       status: scheduledAt ? 'PENDING' : 'SENT',
+//       isAutomated: isAutomated || false,
+//       trigger: trigger || null,
+//     });
+
+//     await communicationLog.save();
+//     console.log('Communication log saved:', communicationLog);
+
+//     // If not scheduled, send immediately
+//     if (!scheduledAt) {
+//       await exports.sendCampaign(communicationLog);
+//     }
+
+//     // Return the saved communication log and googleId
+//     res.status(201).json({
+//       message: 'Campaign created successfully!',
+//       googleId,
+//       communicationLog,
+//     });
+//   } catch (err) {
+//     console.error('Error in createScheduledCampaign:', err.message);
+//     res.status(400).json({ error: err.message });
+//   }
+// };
+
+
+// exports.getCampaigns = async (req, res) => {
+//   try {
+//     console.log('Received request to get campaigns');
+
+//     const campaigns = await CommunicationLog.find().sort({ sentAt: -1 });
+//     res.json(campaigns);
+//   } catch (err) {
+//     console.error('Error in getCampaigns:', err.message);
+//     res.status(400).json({ error: err.message });
+//   }
+// };
+
+// // Deletes a specific campaign by ID
+// exports.deleteCampaign = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const deletedCampaign = await CommunicationLog.findByIdAndDelete(id);
+
+//     if (!deletedCampaign) {
+//       return res.status(404).json({ error: 'Campaign not found' });
+//     }
+
+//     res.status(200).json({ message: 'Campaign deleted successfully' });
+//   } catch (err) {
+//     console.error('Error in deleteCampaign:', err.message);
+//     res.status(500).json({ error: 'Failed to delete campaign' });
+//   }
+// };
+
 exports.getCampaigns = async (req, res) => {
   try {
-    console.log('Received request to get campaigns');
+    const { googleId } = req.query; // Retrieve googleId from query parameters
 
-    const campaigns = await CommunicationLog.find().sort({ sentAt: -1 });
+    if (!googleId) {
+      return res.status(400).json({ error: 'googleId is required' });
+    }
+
+    // Query campaigns using googleId
+    const campaigns = await CommunicationLog.find({ googleId }).sort({ sentAt: -1 });
+
     res.json(campaigns);
   } catch (err) {
-    console.error('Error in getCampaigns:', err.message);
-    res.status(400).json({ error: err.message });
+    console.error('Error fetching campaigns:', err);
+    res.status(500).json({ error: 'An error occurred while fetching campaigns' });
   }
 };
 
-// Deletes a specific campaign by ID
 exports.deleteCampaign = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedCampaign = await CommunicationLog.findByIdAndDelete(id);
+    const userId = req.session.userId; // Ensure only the creator can delete
 
+    const deletedCampaign = await CommunicationLog.findOneAndDelete({ _id: id, userId });
     if (!deletedCampaign) {
-      return res.status(404).json({ error: 'Campaign not found' });
+      return res.status(404).json({ error: 'Campaign not found or not authorized' });
     }
 
     res.status(200).json({ message: 'Campaign deleted successfully' });
   } catch (err) {
-    console.error('Error in deleteCampaign:', err.message);
     res.status(500).json({ error: 'Failed to delete campaign' });
   }
 };
@@ -163,7 +269,7 @@ const getMongoOperator = (operator) => {
     case '!=':
       return '$ne';
     default:
-      throw new Error(`Unsupported operator: ${operator}`);
+      throw new Error(`Unsupported operator:${operator}`);
   }
 };
 

@@ -1,16 +1,19 @@
-/* Home.css */
-
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f6f9; /* Light background for a modern look */
-  color: #333333; /* Dark gray for readability */
+  background-color: #f4f6f9; 
+  color: #333333; 
   margin: 0;
 }
 
 .navbar {
-  background-color: #4caf50; /* Green color for branding */
+  background: linear-gradient(90deg, #004a99, #007bff); 
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  transition: background 0.3s ease; 
+}
+
+.navbar:hover {
+  background: linear-gradient(90deg, #003366, #0056b3); 
 }
 
 .navbar ul {
@@ -28,25 +31,37 @@ body {
 .navbar li a,
 .navbar li button {
   display: block;
-  color: white;
+  color: white; 
   text-align: center;
   padding: 14px 20px;
   text-decoration: none;
   font-weight: 500;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease; 
+  position: relative;
 }
 
 .navbar li a:hover,
 .navbar li button:hover {
-  background-color: #388e3c; /* Darker green on hover */
-  color: #e0f7fa; /* Light color for contrast */
+  color: #e0f7fa; 
+  transform: scale(1.1);
 }
 
-.navbar li button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
+.navbar li a::after,
+.navbar li button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #e0f7fa; 
+  transition: width 0.3s ease, left 0.3s ease; 
+}
+
+.navbar li a:hover::after,
+.navbar li button:hover::after {
+  width: 100%; 
+  left: 0;
 }
 
 .logout-button {
@@ -54,14 +69,14 @@ body {
 }
 
 .content {
-  padding: 40px; /* Increased padding for a spacious layout */
-  max-width: 1200px; /* Constrain content width */
+  padding: 40px; 
+  max-width: 1200px; 
   margin: 0 auto;
 }
 
 .page-title {
-  font-size: 2rem; /* Larger font for title */
-  color: #4caf50; /* Match brand color */
+  font-size: 2rem; 
+  color: #4caf50; 
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
@@ -99,7 +114,7 @@ body {
   .content {
     padding: 20px;
   }
-  
+
   .page-title {
     font-size: 1.5rem;
   }

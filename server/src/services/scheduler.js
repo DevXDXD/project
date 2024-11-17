@@ -1,9 +1,8 @@
 const cron = require('node-cron');
 const CommunicationLog = require('../models/CommunicationLog');
 const Customer = require('../models/Customer');
-const { sendCampaign } = require('../controllers/campaign.controller');  // Import sendCampaign function
+const { sendCampaign } = require('../controllers/campaign.controller');  
 
-// Helper function to process pending campaigns
 const processPendingCampaigns = async () => {
   console.log('Checking for scheduled campaigns...');
 

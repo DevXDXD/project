@@ -7,7 +7,15 @@ const api = axios.create({
 });
 
 export const createCustomer = (customerData) => api.post('/customers', customerData);
-export const createOrder = (orderData) => api.post('/orders', orderData);
+
+export const createOrder = (orderData) => {
+  const googleId = localStorage.getItem('googleId'); // Retrieve googleId from local storage
+  if (!googleId) {
+    return Promise.reject(new Error('googleId not found. Please log in again.'));
+  }
+  return api.post('/orders', { ...orderData, googleId }); // Include googleId in the payload
+};
+
 export const createAudience = (audienceData) => api.post('/campaigns/audience', audienceData);
-export const getCampaigns = () => api.get('/campaigns/')
+export const getCampaigns = (googleId) => api.get(`/campaigns?googleId=${googleId}`);
 export const deleteCampaign = (id) => api.delete(`/campaigns/${id}`);

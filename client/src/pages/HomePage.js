@@ -1,42 +1,45 @@
 // components/HomePage.js
 import React from 'react';
 import './HomePage.css'; // Import the CSS file for HomePage styling
-import { FaUserPlus, FaClipboardList, FaUsers, FaListAlt } from 'react-icons/fa'; // Import icons
+import { AiOutlineUserAdd, AiOutlineShoppingCart, AiOutlineTeam, AiOutlineFundProjectionScreen } from 'react-icons/ai'; // New icons from Ant Design icons
 
 const HomePage = () => {
   return (
     <div className="home-page">
-      <h1 className="home-page-title">Welcome to the Mini- CRM Application</h1>
-      <p className="home-page-intro">Here's how you can use the application:</p>
+      <h1 className="home-page-title">
+  Welcome to Your <span className="highlight">Mini-CRM</span> Dashboard
+</h1>
+
+      <p className="home-page-intro">Here’s how you can get started:</p>
       <ul className="home-page-list">
         <li>
-          <FaUserPlus className="icon" />
+          <AiOutlineUserAdd className="icon" />
           <div className="content">
-            <strong>Create Customer Button:</strong> To create a new user.
+            <strong>Add New Customer:</strong> Use this feature to register a new user in the system.
           </div>
         </li>
         <li>
-          <FaClipboardList className="icon" />
+          <AiOutlineShoppingCart className="icon" />
           <div className="content">
-            <strong>Create Order Button:</strong> Create an order based on a user. Collects total spend, number of visits, and last visited metrics.
+            <strong>Create New Order:</strong> Generate an order for a user, including metrics like total spending, visit frequency, and last visit date.
           </div>
         </li>
         <li>
-          <FaUsers className="icon" />
+          <AiOutlineTeam className="icon" />
           <div className="content">
-            <strong>Create Audience Button:</strong> To create a campaign based on an audience of customers with the following criteria:
+            <strong>Build Audience Campaigns:</strong> Design campaigns by targeting customers based on specific conditions:
             <ul className="nested-list">
-              <li>Customers with total spends &gt; INR 10,000</li>
-              <li>Customers with total spends &gt; INR 10,000 AND max number of visits are 3</li>
-              <li>Customers not visited in the last 3 months</li>
+              <li>Customers with spending over INR 10,000</li>
+              <li>Customers who spent over INR 10,000 and visited up to 3 times</li>
+              <li>Customers who haven’t visited in the past 3 months</li>
             </ul>
-            The user should be able to add multiple rules on different available fields and perform AND/OR operations between them. Before saving the audience, they should be able to click a button and check the audience size. Upon saving the audience, step B should happen, and the user should be taken to a screen with a list of past campaigns with the latest campaign on top.
+            You can set multiple rules for different fields and combine them using AND/OR logic. Check the audience size before saving the campaign, and once saved, you’ll be redirected to a page displaying all past campaigns, with the newest one on top.
           </div>
         </li>
         <li>
-          <FaListAlt className="icon" />
+          <AiOutlineFundProjectionScreen className="icon" />
           <div className="content">
-            <strong>Campaign List Button:</strong> For seeing data of all campaigns created till now with their details.
+            <strong>View Campaign History:</strong> Access a detailed list of all campaigns created so far, arranged chronologically.
           </div>
         </li>
       </ul>

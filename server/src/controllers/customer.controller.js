@@ -20,22 +20,23 @@ exports.createCustomer = async (req, res) => {
       return res.status(400).json({ error: 'Name and email are required' });
     }
 
-    // Check for valid email format
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      return res.status(400).json({ error: 'Email must be a valid email address' });
+    // Check if the email already exists
+    const existingCustomer = await Customer.findOne({ email });
+    if (existingCustomer) {
+      return res.status(400).json({ error: 'Email already exists' });
     }
 
     const customer = new Customer({ name, email });
     console.log('[x] Customer object created:', customer);
 
-    await publishMessage({ type: 'CREATE_CUSTOMER', payload: customer });
-    console.log('[x] Message published to queue:', { type: 'CREATE_CUSTOMER', payload: customer });
+    // Save the customer to the database
+    const savedCustomer = await customer.save();
+    console.log('[x] Customer saved to database:', savedCustomer);
 
-    res.status(201).json(customer);
-    console.log('[x] Response sent to client with status 201:', customer);
+    res.status(201).json(savedCustomer);
   } catch (err) {
-    console.error('[x] Error creating customer:', err);
-    res.status(400).json({ error: err.message });
+    console.error('[x] Error creating customer:', err.message);
+    res.status(500).json({ error: 'Error creating customer' });
   }
 };
 

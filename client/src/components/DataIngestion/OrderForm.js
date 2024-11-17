@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createOrder } from '../../services/api';
+import { FaShoppingCart } from 'react-icons/fa'; // Import icon
 import './OrderForm.css';
 
 const OrderForm = () => {
@@ -25,10 +26,7 @@ const OrderForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log('Form submitted');  // Debugging statement
     const newErrors = validate();
-    console.log('Validation errors:', newErrors);  // Debugging statement
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -36,21 +34,30 @@ const OrderForm = () => {
     }
 
     try {
-      console.log('Creating order with:', { customer: customerId, amount: parseFloat(amount) });  // Debugging statement
-      await createOrder({ customerId: customerId, amount: parseFloat(amount) });
-      alert('Order created successfully');
+      // Call createOrder API with customerId and amount
+      const response = await createOrder({
+        customerId: customerId.trim(),
+        amount: parseFloat(amount),
+      });
+
+      alert(response.data.message); // Show success message
       setCustomerId('');
       setAmount('');
       setErrors({});
     } catch (err) {
-      console.error('Error creating order:', err);  // Debugging statement
-      alert('Error creating order');
+      console.error('Error creating order:', err);
+      alert('An error occurred while creating the order. Please try again.');
     }
   };
 
   return (
     <div className="container">
       <form onSubmit={handleSubmit} className="form">
+        {/* Add Icon */}
+        <div className="icon-container">
+          <FaShoppingCart className="icon" />
+        </div>
+
         <h2 className="heading">Create Order</h2>
         <div className="form-group">
           <input
@@ -74,7 +81,7 @@ const OrderForm = () => {
           />
           {errors.amount && <div className="error">{errors.amount}</div>}
         </div>
-        <button type="submit" className="button" disabled={Object.keys(errors).length > 0}>Create Order</button>
+        <button type="submit" className="button">Create Order</button>
       </form>
     </div>
   );
